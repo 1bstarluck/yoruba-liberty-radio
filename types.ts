@@ -23,12 +23,6 @@ export enum Page {
   ArticleDetail = 'Article Detail'
 }
 
-export interface HeaderContent {
-  title: string;
-  subtitle: string;
-  tagline: string;
-}
-
 export interface Product {
   id: number;
   name: string;
@@ -135,6 +129,11 @@ export interface VisionPageContent {
     imageUrl: string | null;
 }
 
+export interface NowPlaying {
+    artist: string;
+    song: string;
+}
+
 export interface YorubaHero {
     name: string;
     bio: string;
@@ -149,46 +148,4 @@ export interface AnalyticsData {
     listenerTrends: string; // Comma-separated numbers
     topLocations: string; // Semicolon-separated pairs, e.g., "Lagos:45;London:25"
     topProducts: string; // Semicolon-separated pairs, e.g., "Radio:1500;T-Shirt:800"
-}
-
-export interface TraditionalQAItem {
-  id: number;
-  question: string;
-  answer: string;
-}
-
-export interface ChatMessage {
-  id: number;
-  sender: string;
-  text: string;
-  isUser: boolean;
-  timestamp: string;
-}
-
-export interface Testimonial {
-  id: number;
-  quote: string;
-  author: string;
-}
-
-export interface HomePageContent {
-  heroTitle: string;
-  heroSubtitle: string;
-  heroButtonText: string;
-  yorubaPeopleTitle: string;
-  yorubaPeopleContent: string;
-  yorubaPeopleButtonText: string;
-  testimonialsTitle: string;
-  exploreTitle: string;
-  exploreCard1Title: string;
-  exploreCard1Content: string;
-  exploreCard1ButtonText: string;
-  exploreCard2Title: string;
-  exploreCard2Content: string;
-  exploreCard2ButtonText: string;
-}
-
-export interface NowPlaying {
-  songTitle: string;
-  artistName: string;
 }

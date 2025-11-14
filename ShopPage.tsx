@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Product } from '../types';
 import { AddToCartIcon } from '../components/icons/AddToCartIcon';
 
@@ -14,25 +14,23 @@ const ProductCard: React.FC<{ product: Product; onAddToCart: (product: Product) 
 
     return (
         <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden flex flex-col sm:flex-row">
-            <div className="sm:w-2/5 p-4 order-2 sm:order-1 flex flex-col justify-between">
-                <div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">{product.name}</h3>
-                    <p className="mt-2 text-gray-600 dark:text-gray-300">{product.description}</p>
+            <div className="sm:w-2/5 p-4 order-1 sm:order-2 flex-grow">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">{product.name}</h3>
+                <p className="mt-2 text-gray-600 dark:text-gray-300 flex-grow">{product.description}</p>
+            </div>
+            <div className="sm:w-3/5 order-2 sm:order-1 flex flex-col">
+                <div className="relative pb-2/3 sm:pb-full h-full">
+                    <img className="absolute h-full w-full object-cover" src={imageUrl} alt={product.name} />
                 </div>
-                <div className="mt-4 flex items-center justify-between">
+                <div className="p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-800/50">
                     <span className="text-2xl font-bold text-blue-600 dark:text-yellow-400">${product.price.toFixed(2)}</span>
                     <button 
                         onClick={() => onAddToCart(product)}
-                        className="bg-blue-600 text-white font-semibold p-3 rounded-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-700 focus:ring-blue-500"
+                        className="bg-blue-600 text-white font-semibold p-3 rounded-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-gray-700 focus:ring-blue-500"
                         aria-label={`Add ${product.name} to cart`}
                     >
                         <AddToCartIcon />
                     </button>
-                </div>
-            </div>
-            <div className="sm:w-3/5 order-1 sm:order-2">
-                <div className="relative pb-2/3 sm:pb-0 h-48 sm:h-full">
-                    <img className="absolute h-full w-full object-cover" src={imageUrl} alt={product.name} />
                 </div>
             </div>
         </div>

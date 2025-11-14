@@ -1,7 +1,5 @@
 {
   "name": "Yoruba Liberty Radio",
   "description": "A mobile application for Yoruba Liberty Radio, Iroyin Itaniji, featuring live streaming, e-commerce, community news, and interactive Q&A powered by Gemini.",
-  "requestFramePermissions": [
-    "microphone"
-  ]
+  "requestFramePermissions": []
 }
