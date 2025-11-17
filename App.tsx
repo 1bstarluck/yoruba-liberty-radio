@@ -1,44 +1,44 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { Page, CartItem, Product, NewsArticle, PodcastEpisode, BlogPost, CalendarEvent, ContactInfo, DonationOption, SubscriptionTier, DonationPageContent, ThankYouContent, DiasporaPageContent, YouthConnectPageContent, AboutUsPageContent, VisionPageContent, NowPlaying, YorubaHero, AnalyticsData } from './types';
-import Header from './components/Header';
-import BottomNav from './components/BottomNav';
-import ShoppingCart from './components/ShoppingCart';
-import HomePage from './pages/HomePage';
-import ShopPage from './pages/ShopPage';
-import CommunityNewsPage from './pages/CommunityNewsPage';
-import MorePage from './pages/MorePage';
-import ContactPage from './pages/ContactPage';
-import YouthConnectPage from './pages/YouthConnectPage';
-import DiasporaNetworkPage from './pages/DiasporaNetworkPage';
-import AboutUsPage from './pages/AboutUsPage';
-import VisionPage from './pages/VisionPage';
-import MissionPage from './pages/MissionPage';
-import AnalyticsPage from './pages/AnalyticsPage';
-import CalendarPage from './pages/CalendarPage';
-import WidgetsPage from './pages/WidgetsPage';
-import QAPage from './pages/QAPage';
-import PodcastPage from './pages/PodcastPage';
-import BlogPage from './pages/BlogPage';
-import Footer from './components/Footer';
-import BackendPage from './pages/BackendPage';
-import DonationPage from './pages/DonationPage';
-import SubscriptionPage from './pages/SubscriptionPage';
-import ThankYouPage from './pages/ThankYouPage';
-import ArticleDetailPage from './pages/ArticleDetailPage';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { Page, CartItem, Product, NewsArticle, PodcastEpisode, BlogPost, CalendarEvent, ContactInfo, DonationOption, SubscriptionTier, DonationPageContent, ThankYouContent, DiasporaPageContent, YouthConnectPageContent, AboutUsPageContent, VisionPageContent, YorubaHero, AnalyticsData, TraditionalQAItem, Testimonial, HomePageContent, HeaderContent, NowPlaying } from './types.ts';
+import Header from './components/Header.tsx';
+import BottomNav from './components/BottomNav.tsx';
+import ShoppingCart from './components/ShoppingCart.tsx';
+import HomePage from './pages/HomePage.tsx';
+import ShopPage from './pages/ShopPage.tsx';
+import CommunityNewsPage from './pages/CommunityNewsPage.tsx';
+import MorePage from './pages/MorePage.tsx';
+import ContactPage from './pages/ContactPage.tsx';
+import YouthConnectPage from './pages/YouthConnectPage.tsx';
+import DiasporaNetworkPage from './pages/DiasporaNetworkPage.tsx';
+import AboutUsPage from './pages/AboutUsPage.tsx';
+import VisionPage from './pages/VisionPage.tsx';
+import MissionPage from './pages/MissionPage.tsx';
+import AnalyticsPage from './pages/AnalyticsPage.tsx';
+import CalendarPage from './pages/CalendarPage.tsx';
+import WidgetsPage from './pages/WidgetsPage.tsx';
+import QAPage from './pages/QAPage.tsx';
+import PodcastPage from './pages/PodcastPage.tsx';
+import BlogPage from './pages/BlogPage.tsx';
+import Footer from './components/Footer.tsx';
+import BackendPage from './pages/BackendPage.tsx';
+import DonationPage from './pages/DonationPage.tsx';
+import SubscriptionPage from './pages/SubscriptionPage.tsx';
+import ThankYouPage from './pages/ThankYouPage.tsx';
+import ArticleDetailPage from './pages/ArticleDetailPage.tsx';
 
 // Initial Data moved here to simulate a database/CMS
 const initialProducts: Product[] = [
-  { id: 1, name: 'Emergency Multifunctional Shortwave Radio', description: 'YORUBA LIBERTY RADIO branded emergency radio. Features AM/FM, Shortwave, weather alerts, solar charging, hand crank, and a power bank. Your reliable companion.', price: 59.99, imageUrl: 'https://images.unsplash.com/photo-1588056024183-53c101c27d42?q=80&w=600&auto-format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-  { id: 2, name: 'YLR Branded T-Shirt', description: 'High-quality cotton T-Shirt with the Yoruba Liberty Radio logo. Show your support!', price: 24.99, imageUrl: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=600&auto-format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-  { id: 3, name: 'Iroyin Itaniji Coffee Mug', description: 'Start your day with the "Awakening News". A perfect ceramic mug for your morning coffee or tea.', price: 15.99, imageUrl: 'https://images.unsplash.com/photo-1616394478834-3a7852b6d513?q=80&w=600&auto-format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+  { id: 1, name: 'Emergency Multifunctional Shortwave Radio', description: 'YORUBA LIBERTY RADIO branded emergency radio. Features AM/FM, Shortwave, weather alerts, solar charging, hand crank, and a power bank. Your reliable companion.', price: 59.99, imageUrl: 'https://images.unsplash.com/photo-1588056024183-53c101c27d42?q=80&w=600&auto-format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+  { id: 2, name: 'YLR Branded T-Shirt', description: 'High-quality cotton T-Shirt with the Yoruba Liberty Radio logo. Show your support!', price: 24.99, imageUrl: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=600&auto-format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+  { id: 3, name: 'Iroyin Itaniji Coffee Mug', description: 'Start your day with the "Awakening News". A perfect ceramic mug for your morning coffee or tea.', price: 15.99, imageUrl: 'https://images.unsplash.com/photo-1616394478834-3a7852b6d513?q=80&w=600&auto-format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
   { id: 4, name: 'YLR Branded Cap', description: 'Stylish and comfortable cap with the YLR logo.', price: 19.99, imageUrl: '' }, // No image URL to show placeholder
 ];
 
 const initialNews: NewsArticle[] = [
-    { id: 1, title: "Annual Yoruba Cultural Festival Draws Thousands", excerpt: "The annual festival celebrating Yoruba heritage was a massive success this year, featuring traditional music, dance, and art from across the globe.", author: "Adebayo Alonge", date: "3 days ago", imageUrl: "https://images.unsplash.com/photo-1597157636186-c37b35543552?q=80&w=600&auto-format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { id: 2, title: "Youth Connect Initiative Launches Mentorship Program", excerpt: "A new program aims to connect young Yoruba professionals with experienced mentors in their fields to foster growth and leadership.", author: "Folake Ojo", date: "1 week ago", imageUrl: "https://images.unsplash.com/photo-1541507099233-818f4a258a18?q=80&w=600&auto-format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-    { id: 3, title: "Diaspora Network Announces Global Business Summit", excerpt: "Yoruba entrepreneurs from around the world will gather in Lagos for a summit focused on investment and collaboration.", author: "Chinedu Okoro", date: "2 weeks ago", imageUrl: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=600&auto-format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
+    { id: 1, title: "Annual Yoruba Cultural Festival Draws Thousands", excerpt: "The annual festival celebrating Yoruba heritage was a massive success this year, featuring traditional music, dance, and art from across the globe.", author: "Adebayo Alonge", date: "3 days ago", imageUrl: "https://images.unsplash.com/photo-1597157636186-c37b35543552?q=80&w=600&auto-format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+    { id: 2, title: "Youth Connect Initiative Launches Mentorship Program", excerpt: "A new program aims to connect young Yoruba professionals with experienced mentors in their fields to foster growth and leadership.", author: "Folake Ojo", date: "1 week ago", imageUrl: "https://images.unsplash.com/photo-1541507099233-818f4a258a18?q=80&w=600&auto-format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+    { id: 3, title: "Diaspora Network Announces Global Business Summit", excerpt: "Yoruba entrepreneurs from around the world will gather in Lagos for a summit focused on investment and collaboration.", author: "Chinedu Okoro", date: "2 weeks ago", imageUrl: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=600&auto-format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
 ];
 
 const initialPodcasts: PodcastEpisode[] = [
@@ -84,7 +84,7 @@ const initialDiasporaContent: DiasporaPageContent = {
     description: `The Yoruba Liberty Radio Diaspora Network is a global community for Yoruba people living outside of Nigeria. Our mission is to preserve our culture, promote our language, and build strong professional and social connections.
 
 Find community events in your city, join professional groups, and stay connected to your roots, no matter where you are in the world.`,
-    imageUrl: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1531545514256-b1400bc00f31?q=80&w=800&auto=format&fit=crop"
 };
 
 const initialYouthConnectContent: YouthConnectPageContent = {
@@ -93,7 +93,7 @@ const initialYouthConnectContent: YouthConnectPageContent = {
     description: `Our Youth Connect program is dedicated to fostering talent, leadership, and cultural pride among young Yoruba individuals worldwide. We provide resources, mentorship, and networking opportunities to help them achieve their full potential.
 
 Join our workshops, seminars, and community projects to connect with peers, learn from leaders, and make a positive impact.`,
-    imageUrl: "https://images.unsplash.com/photo-1573496773905-f5b17e76b254?q=80&w=600&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    imageUrl: "https://images.unsplash.com/photo-1573496773905-f5b17e76b254?q=80&w=600&auto-format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 };
 
 const initialAboutUsContent: AboutUsPageContent = {
@@ -106,7 +106,7 @@ Our journey began with a simple mission: to create a platform that connects, inf
 YLR is more than just a radio station; it is a community hub. Through initiatives like the Youth Connect and Diaspora Network, we foster connections, empower the next generation, and build bridges across continents. We believe in the power of unity and the importance of a shared identity.
 
 Thank you for being a part of our story. Together, we will continue to amplify the voice of the Yoruba people for generations to come.`,
-    imageUrl: "https://images.unsplash.com/photo-1519702111-344315514643?q=80&w=600&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1519702111-3443155214643?q=80&w=600&auto-format&fit=crop"
 };
 
 const initialVisionContent: VisionPageContent = {
@@ -116,7 +116,7 @@ const initialVisionContent: VisionPageContent = {
     description: `We envision a future where every Yoruba person, regardless of their location, feels a strong connection to their roots. A future where our language thrives, our traditions are celebrated, and our stories are told with pride on a global stage.
 
 Through innovative broadcasting and digital engagement, we aim to be the catalyst for cultural renaissance, economic empowerment, and social cohesion within the worldwide Yoruba community.`,
-    imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto=format&fit=crop"
+    imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto-format&fit=crop"
 };
 
 const initialYorubaHero: YorubaHero = {
@@ -135,12 +135,76 @@ const initialAnalyticsData: AnalyticsData = {
     topProducts: "Emergency Radio:1950;T-Shirt:1230;Coffee Mug:980;Cap:661"
 };
 
+const initialTraditionalQA: TraditionalQAItem[] = [
+    {
+        id: 1,
+        question: "What is Yoruba Liberty Radio (YLR)?",
+        answer: "Yoruba Liberty Radio is an international shortwave broadcasting service dedicated to being the voice of the Yoruba people, both at home and in the diaspora. We provide news, cultural programming, and a platform for community connection."
+    },
+    {
+        id: 2,
+        question: "What is the mission of YLR?",
+        answer: "Our core mission is to inform, educate, preserve, and empower the global Yoruba community. We aim to provide unbiased news, promote our rich culture and language, and foster a strong, united network of Yoruba people worldwide."
+    },
+    {
+        id: 3,
+        question: "What does 'Iroyin Itaniji' mean?",
+        answer: "'Iroyin Itaniji' translates to 'The Awakening News.' It is the flagship news program of Yoruba Liberty Radio, focused on delivering timely, relevant, and insightful news that matters to our listeners."
+    },
+    {
+        id: 4,
+        question: "How can I listen to the live stream?",
+        answer: "You can listen to our live broadcast directly through this app! Just go to the 'Home' page and press the play button on the Live Stream Player. We also broadcast on traditional shortwave frequencies."
+    },
+    {
+        id: 5,
+        question: "How can I support the station?",
+        answer: "You can support us by listening regularly, sharing our app with friends and family, and by purchasing merchandise from our 'Shop' section. Every purchase helps us continue our mission."
+    }
+];
+
+const initialTestimonials: Testimonial[] = [
+    { id: 1, quote: "Yoruba Liberty Radio keeps me connected to my roots, even miles away from home. The news is always timely and relevant.", author: "Bisi Adebayo, London" },
+    { id: 2, quote: "The Q&A with Gemini is fantastic! I've learned so much about our culture. Thank you for this wonderful platform.", author: "Tunde Okoro, Toronto" },
+    { id: 3, quote: "Listening to Iroyin Itaniji every morning from Lagos is the best way to start my day. It's authentic and informative.", author: "Femi Adekunle, Lagos" },
+    { id: 4, quote: "As a Yoruba man in New York, this station is my lifeline to our culture. The diaspora network features are a great addition.", author: "Ayo Williams, New York" },
+];
+
+const initialHomePageContent: HomePageContent = {
+    heroTitle: "The Voice of the Yoruba People",
+    heroSubtitle: "Connecting our community at home and abroad through news, culture, and stories.",
+    heroButtonText: "Explore Latest News",
+    yorubaPeopleTitle: "Who are the Yoruba People?",
+    yorubaPeopleContent: "The Yoruba people are one of Africa's largest ethnic groups, predominantly found in Southwestern Nigeria and neighboring countries. Renowned for a rich history centered around powerful city-states like Ife and Oyo, their culture is globally celebrated for its vibrant arts, complex mythology, and profound philosophical concepts. From the intricate bronze sculptures of Ife to the rhythmic beats of talking drums, the Yoruba heritage has made a significant and lasting impact on the world.",
+    yorubaPeopleButtonText: "Learn More About Us &rarr;",
+    testimonialsTitle: "What Our Listeners Say",
+    exploreTitle: "Explore Our Radio",
+    exploreCard1Title: "Crystal Clear Reception",
+    exploreCard1Content: "Built for reliability, ensuring you never miss a broadcast.",
+    exploreCard1ButtonText: "View Photos",
+    exploreCard2Title: "Video: Unboxing & Demo",
+    exploreCard2Content: "See all the features of our emergency radio in detail.",
+    exploreCard2ButtonText: "Watch Now",
+};
+
+const initialHeaderContent: HeaderContent = {
+    title: "YORUBA LIBERTY RADIO",
+    subtitle: "IROYIN ITANIJI",
+    tagline: "International Shortwave Broadcasting Service",
+};
+
+const initialNowPlaying: NowPlaying = {
+    songTitle: "Osupa",
+    artistName: "King Sunny Adé",
+};
+
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>(Page.Home);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isLivePlaying, setIsLivePlaying] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const mainScrollRef = useRef<HTMLElement | null>(null);
   
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -163,6 +227,24 @@ const App: React.FC = () => {
     }
   }, [theme]);
 
+  useEffect(() => {
+    const mainEl = mainScrollRef.current;
+    if (!mainEl) return;
+
+    const handleScroll = () => {
+        if (mainEl.scrollTop > 10) {
+            setIsScrolled(true);
+        } else {
+            setIsScrolled(false);
+        }
+    };
+
+    mainEl.addEventListener('scroll', handleScroll);
+    return () => {
+        mainEl.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const toggleTheme = useCallback(() => {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
   }, []);
@@ -180,19 +262,24 @@ const App: React.FC = () => {
   const [donationPageContent, setDonationPageContent] = useState<DonationPageContent>({
     title: 'Support Yoruba Liberty Radio',
     description: 'Your generous contribution helps us continue our mission to inform, educate, and empower the global Yoruba community. Every donation, big or small, makes a difference.',
-    imageUrl: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=800&auto-format&fit=crop',
   });
   const [thankYouContent, setThankYouContent] = useState<ThankYouContent>({
     title: 'Thank You!',
     message: 'Your support means the world to us. Together, we are keeping the voice of the Yoruba people strong and vibrant.',
   });
   const [diasporaPageContent, setDiasporaPageContent] = useState<DiasporaPageContent>(initialDiasporaContent);
+  // Fix: Corrected typo from initialYouthConnectPageContent to initialYouthConnectContent.
   const [youthConnectPageContent, setYouthConnectPageContent] = useState<YouthConnectPageContent>(initialYouthConnectContent);
   const [aboutUsPageContent, setAboutUsPageContent] = useState<AboutUsPageContent>(initialAboutUsContent);
   const [visionPageContent, setVisionPageContent] = useState<VisionPageContent>(initialVisionContent);
-  const [nowPlaying, setNowPlaying] = useState<NowPlaying>({ artist: "King Sunny Adé", song: "Ja Funmi" });
   const [yorubaHero, setYorubaHero] = useState<YorubaHero>(initialYorubaHero);
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData>(initialAnalyticsData);
+  const [traditionalQA, setTraditionalQA] = useState<TraditionalQAItem[]>(initialTraditionalQA);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
+  const [homePageContent, setHomePageContent] = useState<HomePageContent>(initialHomePageContent);
+  const [headerContent, setHeaderContent] = useState<HeaderContent>(initialHeaderContent);
+  const [nowPlaying, setNowPlaying] = useState<NowPlaying>(initialNowPlaying);
 
 
   const addToCart = useCallback((product: Product) => {
@@ -223,12 +310,17 @@ const App: React.FC = () => {
     setActivePage(Page.ArticleDetail);
   }, []);
 
+  const handleStartShopping = useCallback(() => {
+    setIsCartOpen(false);
+    setActivePage(Page.Shop);
+  }, []);
+
   const renderPage = () => {
     switch (activePage) {
       case Page.Home:
-        return <HomePage onProductClick={() => setActivePage(Page.Shop)} onNavigate={setActivePage} isLivePlaying={isLivePlaying} setIsLivePlaying={setIsLivePlaying} events={events} nowPlaying={nowPlaying} />;
+        return <HomePage onProductClick={() => setActivePage(Page.Shop)} onNavigate={setActivePage} events={events} testimonials={testimonials} content={homePageContent} nowPlaying={nowPlaying} />;
       case Page.QA:
-        return <QAPage />;
+        return <QAPage traditionalQA={traditionalQA} />;
       case Page.Shop:
         return <ShopPage products={products} onAddToCart={addToCart} />;
       case Page.News:
@@ -297,15 +389,23 @@ const App: React.FC = () => {
                   setYouthConnectPageContent={setYouthConnectPageContent}
                   diasporaPageContent={diasporaPageContent}
                   setDiasporaPageContent={setDiasporaPageContent}
-                  nowPlaying={nowPlaying}
-                  setNowPlaying={setNowPlaying}
                   yorubaHero={yorubaHero}
                   setYorubaHero={setYorubaHero}
                   analyticsData={analyticsData}
                   setAnalyticsData={setAnalyticsData}
+                  traditionalQA={traditionalQA}
+                  setTraditionalQA={setTraditionalQA}
+                  testimonials={testimonials}
+                  setTestimonials={setTestimonials}
+                  homePageContent={homePageContent}
+                  setHomePageContent={setHomePageContent}
+                  headerContent={headerContent}
+                  setHeaderContent={setHeaderContent}
+                  nowPlaying={nowPlaying}
+                  setNowPlaying={setNowPlaying}
                 />;
       default:
-        return <HomePage onProductClick={() => setActivePage(Page.Shop)} onNavigate={setActivePage} isLivePlaying={isLivePlaying} setIsLivePlaying={setIsLivePlaying} events={events} nowPlaying={nowPlaying} />;
+        return <HomePage onProductClick={() => setActivePage(Page.Shop)} onNavigate={setActivePage} events={events} testimonials={testimonials} content={homePageContent} nowPlaying={nowPlaying} />;
     }
   };
 
@@ -315,14 +415,15 @@ const App: React.FC = () => {
         onCartClick={() => setIsCartOpen(true)} 
         cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
         logoUrl={logoUrl}
-        isLivePlaying={isLivePlaying}
         theme={theme}
         toggleTheme={toggleTheme}
+        isScrolled={isScrolled}
+        content={headerContent}
       />
-      <main className="flex-grow overflow-y-auto">
+      <main ref={mainScrollRef} className="flex-grow overflow-y-auto">
         <div className="pb-20">
           {renderPage()}
-          <Footer />
+          <Footer contactInfo={contactInfo} />
         </div>
       </main>
       <BottomNav activePage={activePage} setActivePage={setActivePage} />
@@ -332,6 +433,7 @@ const App: React.FC = () => {
         cartItems={cart}
         onRemoveFromCart={removeFromCart}
         onAddToCart={(product) => addToCart(product as Product)}
+        onStartShopping={handleStartShopping}
       />
     </div>
   );
