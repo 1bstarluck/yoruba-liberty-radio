@@ -1,6 +1,7 @@
-
 import React, { useState } from 'react';
 import { DonationOption, DonationPageContent, Page } from '../types';
+import { PayPalIcon } from '../components/icons/PayPalIcon';
+import { StripeIcon } from '../components/icons/StripeIcon';
 
 interface DonationPageProps {
     donationOptions: DonationOption[];
@@ -79,6 +80,13 @@ const DonationPage: React.FC<DonationPageProps> = ({ donationOptions, content, o
                 >
                     Donate ${selectedAmount > 0 ? selectedAmount : '...'}
                 </button>
+                <div className="mt-4 text-center">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Secure payments powered by</p>
+                    <div className="flex justify-center items-center space-x-4">
+                        <PayPalIcon className="h-6 text-gray-700 dark:text-gray-300" />
+                        <StripeIcon className="h-6 text-gray-700 dark:text-gray-300" />
+                    </div>
+                </div>
             </div>
         </div>
     );

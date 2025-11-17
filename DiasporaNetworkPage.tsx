@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { DiasporaPageContent } from '../types';
+import { DiasporaPageContent } from '../types.ts';
 
 interface DiasporaNetworkPageProps {
   content: DiasporaPageContent;

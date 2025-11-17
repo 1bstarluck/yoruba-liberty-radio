@@ -1,21 +1,31 @@
 
 import React from 'react';
-import { ShoppingCartIcon } from './icons/ShoppingCartIcon';
-import { SunIcon } from './icons/SunIcon';
-import { MoonIcon } from './icons/MoonIcon';
+import { ShoppingCartIcon } from './icons/ShoppingCartIcon.tsx';
+import { SunIcon } from './icons/SunIcon.tsx';
+import { MoonIcon } from './icons/MoonIcon.tsx';
+import { HeaderContent } from '../types.ts';
 
 interface HeaderProps {
   onCartClick: () => void;
   cartCount: number;
   logoUrl: string | null;
-  isLivePlaying: boolean;
   theme: 'light' | 'dark';
   toggleTheme: () => void;
+  isScrolled: boolean;
+  content: HeaderContent;
 }
 
-const Header: React.FC<HeaderProps> = ({ onCartClick, cartCount, logoUrl, isLivePlaying, theme, toggleTheme }) => {
+const Header: React.FC<HeaderProps> = ({ onCartClick, cartCount, logoUrl, theme, toggleTheme, isScrolled, content }) => {
+  const headerClasses = `
+    sticky top-0 z-30 text-white transition-all duration-300
+    ${isScrolled 
+        ? 'bg-blue-900/95 dark:bg-gray-900/95 shadow-lg backdrop-blur-sm' 
+        : 'bg-blue-900 dark:bg-gray-900'
+    }
+  `;
+
   return (
-    <header className="sticky top-0 z-30 bg-blue-900 dark:bg-gray-900 text-white shadow-md">
+    <header className={headerClasses}>
       <div className="h-24 flex items-center justify-between px-4">
         {logoUrl ? (
             <img src={logoUrl} alt="Yoruba Liberty Radio Logo" className="w-16 h-16 object-contain flex-shrink-0" />
@@ -26,16 +36,14 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, cartCount, logoUrl, isLive
         )}
         <div className="text-center flex-grow px-2">
           <div className="flex items-center justify-center space-x-2">
-            <h1 className="text-xl font-extrabold tracking-tight">YORUBA LIBERTY RADIO</h1>
-            {isLivePlaying && (
-              <span className="relative flex h-3 w-3" aria-label="Live stream is active">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-              </span>
-            )}
+            <h1 className="text-xl font-extrabold tracking-tight">{content.title}</h1>
+            <span className="relative flex h-3 w-3" aria-label="Live stream is active">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+            </span>
           </div>
-          <p className="text-sm font-semibold text-yellow-300">IROYIN ITANIJI</p>
-          <p className="text-xs text-gray-300 mt-1">International Shortwave Broadcasting Service</p>
+          <p className="text-sm font-semibold text-yellow-300">{content.subtitle}</p>
+          <p className="text-xs font-semibold text-gray-200 dark:text-gray-300 mt-1 uppercase tracking-wider">{content.tagline}</p>
         </div>
         <div className="flex items-center space-x-1">
             <button 

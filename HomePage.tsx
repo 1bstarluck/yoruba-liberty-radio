@@ -1,173 +1,83 @@
 
-import React, { useState, useRef } from 'react';
-import { Page, CalendarEvent, NowPlaying } from '../types';
-import { PlayIcon } from '../components/icons/PlayIcon';
-import { PauseIcon } from '../components/icons/PauseIcon';
-import { VolumeIcon } from '../components/icons/VolumeIcon';
+import React from 'react';
+import { Page, CalendarEvent, Testimonial, HomePageContent, NowPlaying } from '../types.ts';
+import { YoutubeIcon } from '../components/icons/YoutubeIcon.tsx';
+import { AppStoreIcon } from '../components/icons/AppStoreIcon.tsx';
+import { GooglePlayIcon } from '../components/icons/GooglePlayIcon.tsx';
+import GeminiGreeting from '../components/GeminiGreeting.tsx';
 
-const HeroSection: React.FC<{onNavigate: (page: Page) => void}> = ({ onNavigate }) => {
+const HeroSection: React.FC<{onNavigate: (page: Page) => void; content: HomePageContent}> = ({ onNavigate, content }) => {
     return (
         <div className="bg-blue-900 text-white p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight">The Voice of the Yoruba People</h2>
-            <p className="mt-2 text-blue-200">Connecting our community at home and abroad through news, culture, and stories.</p>
+            <h2 className="text-3xl font-extrabold tracking-tight">{content.heroTitle}</h2>
+            <p className="mt-2 text-blue-200">{content.heroSubtitle}</p>
             <button 
                 onClick={() => onNavigate(Page.News)}
                 className="mt-6 bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-900 focus:ring-yellow-400"
             >
-                Explore Latest News
+                {content.heroButtonText}
             </button>
         </div>
     );
 };
 
-interface LiveStreamPlayerProps {
-    isLivePlaying: boolean;
-    setIsLivePlaying: (isPlaying: boolean) => void;
-    nowPlaying: NowPlaying;
-}
-
-const LiveStreamPlayer: React.FC<LiveStreamPlayerProps> = ({ isLivePlaying, setIsLivePlaying, nowPlaying }) => {
-  const [volume, setVolume] = useState(1);
-  const [error, setError] = useState<string | null>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const streamUrl = 'https://streaming.live365.com/a99577';
-
-  const togglePlayPause = () => {
-    if (!audioRef.current) return;
-    setError(null); // Clear previous errors
-
-    if (isLivePlaying) {
-      audioRef.current.pause();
-      audioRef.current.src = '';
-    } else {
-      audioRef.current.src = streamUrl;
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(err => {
-          console.error("Error playing audio:", err);
-          setError("Stream unavailable. It may be offline.");
-          setIsLivePlaying(false);
-        });
-      }
-    }
-  };
-
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
-    }
-  };
-
-  const handleError = () => {
-    if(isLivePlaying) { // Only show error if it was already playing
-        setError("Stream interrupted. Please try again.");
-        setIsLivePlaying(false);
-    }
-  };
-  
-  const LiveProgressBar = () => {
-    if (!isLivePlaying) return null;
+const YouTubeLiveStreamSection: React.FC = () => {
+    const youtubeLiveUrl = 'https://www.youtube.com/@YorubaLibertyRadio/live';
+    
     return (
-        <div className="w-full bg-gray-700 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-yellow-400 h-1.5 rounded-full animate-indeterminate-progress"></div>
-            <style>
-                {`
-                    @keyframes indeterminate-progress {
-                        0% { transform: translateX(-100%); }
-                        100% { transform: translateX(250%); }
-                    }
-                    .animate-indeterminate-progress {
-                        animation: indeterminate-progress 2s linear infinite;
-                    }
-                `}
-            </style>
+        <div className="bg-gray-900 text-white p-4 rounded-lg shadow-lg">
+            <div className="flex items-center justify-between mb-3">
+                <div>
+                    <h3 className="font-bold text-lg">LIVE STREAM</h3>
+                    <p className="text-yellow-400 text-sm">Now Broadcasting on YouTube</p>
+                </div>
+                <div className="flex items-center space-x-2 p-2">
+                    <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                    <span className="text-red-500 font-semibold">LIVE</span>
+                </div>
+            </div>
+
+            <div 
+                className="w-full h-48 flex items-center justify-center rounded-md relative group bg-cover bg-center"
+                style={{backgroundImage: "url('https://images.unsplash.com/photo-1593339790595-369052df536a?q=80&w=800&auto=format&fit=crop')"}}
+            >
+                <div className="absolute inset-0 bg-black bg-opacity-50 group-hover:bg-opacity-60 transition-all duration-300 rounded-md"></div>
+                <div className="relative text-center p-4">
+                    <p className="text-white font-semibold mb-4">Click to watch the live broadcast</p>
+                    <a
+                        href={youtubeLiveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-red-500 inline-flex items-center space-x-2"
+                        aria-label="Watch Live on YouTube"
+                    >
+                        <YoutubeIcon />
+                        <span>Watch on YouTube</span>
+                    </a>
+                </div>
+            </div>
         </div>
     );
-  };
+};
 
-  return (
-    <div className="bg-gray-900 text-white p-4 rounded-lg shadow-lg">
-      <audio
-        ref={audioRef}
-        onPlay={() => { setIsLivePlaying(true); setError(null); }}
-        onPause={() => setIsLivePlaying(false)}
-        onError={handleError}
-        preload="none"
-        crossOrigin="anonymous"
-        aria-hidden="true"
-      />
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <h3 className="font-bold text-lg">LIVE STREAM</h3>
-          <p className="text-yellow-400 text-sm">Iroyin Itaniji Broadcast</p>
-        </div>
-        <button 
-          onClick={togglePlayPause} 
-          className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-yellow-400"
-          aria-label={isLivePlaying ? "Pause Live Stream" : "Play Live Stream"}
-        >
-          <span className="relative flex h-3 w-3">
-            <span className={`absolute inline-flex h-full w-full rounded-full ${isLivePlaying ? 'animate-ping bg-red-400' : 'bg-gray-400'} opacity-75`}></span>
-            <span className={`relative inline-flex rounded-full h-3 w-3 ${isLivePlaying ? 'bg-red-500' : 'bg-gray-500'}`}></span>
-          </span>
-          <span className={`${isLivePlaying ? 'text-red-500' : 'text-gray-400'} font-semibold`}>LIVE</span>
-        </button>
-      </div>
+const NowPlayingDisplay: React.FC<{ nowPlaying: NowPlaying }> = ({ nowPlaying }) => {
+    if (!nowPlaying || !nowPlaying.songTitle || !nowPlaying.artistName) {
+        return null;
+    }
 
-      <div className="w-full bg-black h-48 flex items-center justify-center rounded-md relative group">
-        {error ? (
-            <div className="text-center text-red-400 px-4">
-                <p className="font-semibold">Playback Error</p>
-                <p className="text-sm mt-1">{error}</p>
-            </div>
-        ) : (
-            <div className={`text-center text-gray-400 transition-opacity duration-300 ${isLivePlaying ? 'opacity-50' : 'opacity-100'}`}>
-              <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.636 5.636a9 9 0 0112.728 0M8.464 15.536a5 5 0 010-7.072"></path></svg>
-              <p className="mt-2">{isLivePlaying ? 'Playing Live...' : 'Stream Paused'}</p>
-            </div>
-        )}
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-all duration-300">
-          <button
-            onClick={togglePlayPause}
-            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold p-4 rounded-full transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-yellow-400 transform group-hover:scale-110"
-            aria-label={isLivePlaying ? 'Pause Stream' : 'Play Stream'}
-          >
-            {isLivePlaying ? <PauseIcon /> : <PlayIcon />}
-          </button>
+    return (
+        <div className="bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+            <p className="text-sm text-yellow-400 font-semibold tracking-wider">NOW PLAYING ON AIR</p>
+            <h4 className="text-xl font-bold truncate">{nowPlaying.songTitle}</h4>
+            <p className="text-md text-gray-300">{nowPlaying.artistName}</p>
+            <p className="text-xs text-gray-500 mt-2">
+                Artist and song information is displayed for attribution purposes. All rights belong to their respective owners.
+            </p>
         </div>
-      </div>
-      
-       {/* Now Playing Section */}
-       {isLivePlaying && nowPlaying.artist && nowPlaying.song && (
-        <div className="mt-4 p-3 bg-black/30 rounded-lg">
-            <p className="text-xs text-gray-400 uppercase tracking-wider">Now Playing</p>
-            <p className="font-bold text-white truncate">{nowPlaying.song}</p>
-            <p className="text-sm text-gray-300 truncate">{nowPlaying.artist}</p>
-            <p className="text-xs text-gray-500 mt-2">Music provided for broadcast. All rights belong to original artists.</p>
-        </div>
-      )}
-
-      {/* Controls Section */}
-      <div className="mt-4 space-y-3">
-        <LiveProgressBar />
-        <div className="flex items-center space-x-3">
-            <VolumeIcon />
-            <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={volume}
-                onChange={handleVolumeChange}
-                className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-yellow-400"
-                aria-label="Volume control"
-            />
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 const RadioPromoCard: React.FC<{onClick: () => void}> = ({onClick}) => {
@@ -180,7 +90,7 @@ const RadioPromoCard: React.FC<{onClick: () => void}> = ({onClick}) => {
         <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden cursor-pointer" onClick={onClick}>
             <div className="md:flex">
                 <div className="md:flex-shrink-0 relative">
-                    <img className="h-48 w-full object-cover md:w-48" src="https://images.unsplash.com/photo-1588056024183-53c101c27d42?q=80&w=600&auto-format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Emergency Shortwave Radio"/>
+                    <img className="h-48 w-full object-cover md:w-48" src="https://images.unsplash.com/photo-1588056024183-53c101c27d42?q=80&w=600&auto-format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Emergency Shortwave Radio"/>
                     <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center hover:bg-opacity-40 transition-opacity">
                         <button 
                             onClick={handleVideoClick} 
@@ -202,6 +112,45 @@ const RadioPromoCard: React.FC<{onClick: () => void}> = ({onClick}) => {
         </div>
     );
 }
+
+const DownloadAppSection: React.FC = () => (
+    <div className="bg-gray-800 dark:bg-black rounded-lg shadow-lg p-6 text-white text-center">
+        <h3 className="text-2xl font-bold text-yellow-400">Take Yoruba Liberty Radio Anywhere</h3>
+        <p className="mt-2 text-gray-300">Listen live, read news, and connect with the community on the go. Download our mobile app today!</p>
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="#" className="bg-black text-white py-2 px-4 rounded-lg border border-gray-600 hover:bg-gray-900 transition-colors flex items-center justify-center space-x-2 w-full sm:w-auto" aria-label="Download on the App Store">
+                <AppStoreIcon />
+                <div>
+                    <p className="text-xs">Download on the</p>
+                    <p className="text-lg font-semibold -mt-1">App Store</p>
+                </div>
+            </a>
+            <a href="#" className="bg-black text-white py-2 px-4 rounded-lg border border-gray-600 hover:bg-gray-900 transition-colors flex items-center justify-center space-x-2 w-full sm:w-auto" aria-label="Get it on Google Play">
+                <GooglePlayIcon />
+                <div>
+                    <p className="text-xs">GET IT ON</p>
+                    <p className="text-lg font-semibold -mt-1">Google Play</p>
+                </div>
+            </a>
+        </div>
+    </div>
+);
+
+const AdvancementCTASection: React.FC<{ onNavigate: (page: Page) => void }> = ({ onNavigate }) => (
+    <div className="bg-blue-50 dark:bg-blue-900/50 p-6 rounded-lg shadow-md text-center">
+        <h3 className="text-2xl font-bold text-blue-900 dark:text-white">For the Advancement of the Yoruba People</h3>
+        <p className="mt-2 text-blue-800 dark:text-blue-200 max-w-2xl mx-auto">
+            Your support fuels our mission to preserve our culture, empower our youth, and amplify our voice on the global stage. Join us in this noble cause.
+        </p>
+        <button
+            onClick={() => onNavigate(Page.Donation)}
+            className="mt-6 bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-3 px-8 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+        >
+            Support the Mission
+        </button>
+    </div>
+);
+
 
 const SupportSection: React.FC<{ onNavigate: (page: Page) => void }> = ({ onNavigate }) => (
     <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
@@ -240,17 +189,17 @@ const TestimonialCard: React.FC<{quote: string; author: string}> = ({quote, auth
     </div>
 );
 
-const YorubaPeopleSection: React.FC<{ onNavigate: (page: Page) => void }> = ({ onNavigate }) => (
+const YorubaPeopleSection: React.FC<{ onNavigate: (page: Page) => void; content: HomePageContent }> = ({ onNavigate, content }) => (
     <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6">
-      <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Who are the Yoruba People?</h3>
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{content.yorubaPeopleTitle}</h3>
       <p className="mt-4 text-gray-600 dark:text-gray-300">
-        The Yoruba people are one of Africa's largest ethnic groups, predominantly found in Southwestern Nigeria and neighboring countries. Renowned for a rich history centered around powerful city-states like Ife and Oyo, their culture is globally celebrated for its vibrant arts, complex mythology, and profound philosophical concepts. From the intricate bronze sculptures of Ife to the rhythmic beats of talking drums, the Yoruba heritage has made a significant and lasting impact on the world.
+        {content.yorubaPeopleContent}
       </p>
       <button 
         onClick={() => onNavigate(Page.About)} 
         className="mt-4 text-blue-600 dark:text-yellow-400 font-semibold hover:underline"
       >
-        Learn More About Us &rarr;
+        {content.yorubaPeopleButtonText}
       </button>
     </div>
 );
@@ -295,73 +244,64 @@ const UpcomingEventsSection: React.FC<{ events: CalendarEvent[], onNavigate: (pa
     );
 };
 
-
 interface HomePageProps {
     onProductClick: () => void;
     onNavigate: (page: Page) => void;
-    isLivePlaying: boolean;
-    setIsLivePlaying: (isPlaying: boolean) => void;
     events: CalendarEvent[];
+    testimonials: Testimonial[];
+    content: HomePageContent;
     nowPlaying: NowPlaying;
 }
 
-const HomePage: React.FC<HomePageProps> = ({onProductClick, onNavigate, isLivePlaying, setIsLivePlaying, events, nowPlaying}) => {
+const HomePage: React.FC<HomePageProps> = ({onProductClick, onNavigate, events, testimonials, content, nowPlaying}) => {
   return (
     <div className="p-4 space-y-6">
-      <HeroSection onNavigate={onNavigate} />
-      <LiveStreamPlayer isLivePlaying={isLivePlaying} setIsLivePlaying={setIsLivePlaying} nowPlaying={nowPlaying} />
-
+      <HeroSection onNavigate={onNavigate} content={content} />
+      <GeminiGreeting />
+      <YouTubeLiveStreamSection />
+      <NowPlayingDisplay nowPlaying={nowPlaying} />
       <RadioPromoCard onClick={onProductClick} />
-
-      <YorubaPeopleSection onNavigate={onNavigate} />
+      <DownloadAppSection />
+      <YorubaPeopleSection onNavigate={onNavigate} content={content} />
       <UpcomingEventsSection events={events} onNavigate={onNavigate} />
-
+      <AdvancementCTASection onNavigate={onNavigate} />
       <SupportSection onNavigate={onNavigate} />
 
       <div>
-        <h3 className="text-xl font-bold mb-3 text-gray-800 dark:text-white">What Our Listeners Say</h3>
+        <h3 className="text-xl font-bold mb-3 text-gray-800 dark:text-white">{content.testimonialsTitle}</h3>
         <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
-            <TestimonialCard 
-                quote="Yoruba Liberty Radio keeps me connected to my roots, even miles away from home. The news is always timely and relevant."
-                author="Bisi Adebayo, London"
-            />
-            <TestimonialCard 
-                quote="The Q&A with Gemini is fantastic! I've learned so much about our culture. Thank you for this wonderful platform."
-                author="Tunde Okoro, Toronto"
-            />
-            <TestimonialCard 
-                quote="Listening to Iroyin Itaniji every morning from Lagos is the best way to start my day. It's authentic and informative."
-                author="Femi Adekunle, Lagos"
-            />
-            <TestimonialCard 
-                quote="As a Yoruba man in New York, this station is my lifeline to our culture. The diaspora network features are a great addition."
-                author="Ayo Williams, New York"
-            />
+            {testimonials.map(testimonial => (
+                 <TestimonialCard 
+                    key={testimonial.id}
+                    quote={testimonial.quote}
+                    author={testimonial.author}
+                />
+            ))}
         </div>
       </div>
 
       <div>
-        <h3 className="text-xl font-bold mb-3 text-gray-800 dark:text-white">Explore Our Radio</h3>
+        <h3 className="text-xl font-bold mb-3 text-gray-800 dark:text-white">{content.exploreTitle}</h3>
         <div className="space-y-4">
             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg flex items-center space-x-4">
-                <img src="https://images.unsplash.com/photo-1559029923-e3a3e6a9d283?q=80&w=200&auto=format&fit=crop" className="w-24 h-24 rounded-lg object-cover flex-shrink-0" alt="Branded radio in a lifestyle setting"/>
+                <img src="https://images.unsplash.com/photo-1559029923-e3a3e6a9d283?q=80&w=200&auto-format&fit=crop" className="w-24 h-24 rounded-lg object-cover flex-shrink-0" alt="Branded radio in a lifestyle setting"/>
                 <div>
-                    <h4 className="font-semibold dark:text-white">Crystal Clear Reception</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Built for reliability, ensuring you never miss a broadcast.</p>
-                     <button className="mt-2 text-sm text-blue-600 dark:text-yellow-400 font-semibold hover:underline">View Photos</button>
+                    <h4 className="font-semibold dark:text-white">{content.exploreCard1Title}</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{content.exploreCard1Content}</p>
+                     <button className="mt-2 text-sm text-blue-600 dark:text-yellow-400 font-semibold hover:underline">{content.exploreCard1ButtonText}</button>
                 </div>
             </div>
              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg flex items-center space-x-4">
                 <div className="relative w-24 h-24 flex-shrink-0">
-                    <img src="https://images.unsplash.com/photo-1563262982-63452b6715f21?q=80&w=200&auto=format&fit=crop" className="w-24 h-24 rounded-lg object-cover" alt="Branded radio on a table"/>
+                    <img src="https://images.unsplash.com/photo-1563262982-63452b6715f21?q=80&w=200&auto-format&fit=crop" className="w-24 h-24 rounded-lg object-cover" alt="Branded radio on a table"/>
                     <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
                         <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm11.5 5.5l-5 3A.5.5 0 0110 12v-4a.5.5 0 01.5-.5.5.5 0 01.25.06l5 3a.5.5 0 010 .88z"></path></svg>
                     </div>
                 </div>
                 <div>
-                    <h4 className="font-semibold dark:text-white">Video: Unboxing & Demo</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">See all the features of our emergency radio in detail.</p>
-                     <button className="mt-2 text-sm text-blue-600 dark:text-yellow-400 font-semibold hover:underline">Watch Now</button>
+                    <h4 className="font-semibold dark:text-white">{content.exploreCard2Title}</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{content.exploreCard2Content}</p>
+                     <button className="mt-2 text-sm text-blue-600 dark:text-yellow-400 font-semibold hover:underline">{content.exploreCard2ButtonText}</button>
                 </div>
             </div>
         </div>

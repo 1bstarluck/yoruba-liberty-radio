@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { Page } from '../types';
-import { HomeIcon } from './icons/HomeIcon';
-import { ShopIcon } from './icons/ShopIcon';
-import { NewsIcon } from './icons/NewsIcon';
-import { MenuIcon } from './icons/MenuIcon';
-import { ChatIcon } from './icons/ChatIcon';
+import { Page } from '../types.ts';
+import { HomeIcon } from './icons/HomeIcon.tsx';
+import { ShopIcon } from './icons/ShopIcon.tsx';
+import { NewsIcon } from './icons/NewsIcon.tsx';
+import { MenuIcon } from './icons/MenuIcon.tsx';
+import { ChatIcon } from './icons/ChatIcon.tsx';
 
 interface BottomNavProps {
   activePage: Page;

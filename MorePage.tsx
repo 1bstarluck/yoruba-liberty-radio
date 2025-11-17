@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Page } from '../types';
-import { PodcastIcon } from '../components/icons/PodcastIcon';
-import { BlogIcon } from '../components/icons/BlogIcon';
+import { Page } from '../types.ts';
+import { PodcastIcon } from '../components/icons/PodcastIcon.tsx';
+import { BlogIcon } from '../components/icons/BlogIcon.tsx';
 
 interface MorePageProps {
     onNavigate: (page: Page) => void;

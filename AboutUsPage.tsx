@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AboutUsPageContent } from '../types';
 
@@ -15,14 +14,14 @@ const AboutUsPage: React.FC<AboutUsPageProps> = ({ content }) => {
       </div>
       <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden">
         {content.imageUrl && (
-          <img 
-              className="h-56 w-full object-cover" 
-              src={content.imageUrl}
-              alt="Radio microphone in a studio"
-          />
+            <img 
+                className="h-56 w-full object-cover" 
+                src={content.imageUrl} 
+                alt="About Yoruba Liberty Radio"
+            />
         )}
-        <div className="p-6 space-y-4 text-gray-700 dark:text-gray-200">
-          <p style={{ whiteSpace: 'pre-line' }}>
+        <div className="p-6 space-y-4">
+          <p className="text-gray-700 dark:text-gray-200" style={{ whiteSpace: 'pre-line' }}>
             {content.description}
           </p>
         </div>
