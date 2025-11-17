@@ -1,5 +1,6 @@
+
 import React, { useState, useCallback } from 'react';
-import { Product, NewsArticle, PodcastEpisode, BlogPost, CalendarEvent, ContactInfo, DonationOption, SubscriptionTier, DonationPageContent, ThankYouContent, AboutUsPageContent, VisionPageContent, YouthConnectPageContent, DiasporaPageContent, YorubaHero, AnalyticsData, TraditionalQAItem, Testimonial, HomePageContent, HeaderContent, NowPlaying } from '../types';
+import { Product, NewsArticle, PodcastEpisode, BlogPost, CalendarEvent, ContactInfo, DonationOption, SubscriptionTier, DonationPageContent, ThankYouContent, AboutUsPageContent, VisionPageContent, YouthConnectPageContent, DiasporaPageContent, NowPlaying, YorubaHero, AnalyticsData } from '../types';
 
 // Generic CRUD form component to reduce repetition
 const CrudForm = <T extends { id: number }>({ item, onSave, onCancel, fields }: { item: Partial<T> | null, onSave: (item: T) => void, onCancel: () => void, fields: (keyof T)[] }) => {
@@ -31,7 +32,7 @@ const CrudForm = <T extends { id: number }>({ item, onSave, onCancel, fields }: 
         const fieldStr = String(field).toLowerCase();
         if (fieldStr.includes('price') || fieldStr.includes('amount')) return 'number';
         if (fieldStr.includes('date')) return 'date';
-        if (fieldStr.includes('description') || fieldStr.includes('excerpt') || fieldStr.includes('features') || fieldStr.includes('answer') || fieldStr.includes('quote') || fieldStr.includes('bio')) return 'textarea';
+        if (fieldStr.includes('description') || fieldStr.includes('excerpt') || fieldStr.includes('features')) return 'textarea';
         if (fieldStr.includes('ispopular')) return 'select-boolean';
         return 'text';
     };
@@ -78,7 +79,7 @@ const CrudForm = <T extends { id: number }>({ item, onSave, onCancel, fields }: 
 
 
 // Generic management section component
-const ManagementSection = <T extends { id: number, title?: string, name?: string, amount?: number, question?: string, quote?: string }>({ title, items, setItems, fields, renderItem }: { title: string, items: T[], setItems: React.Dispatch<React.SetStateAction<T[]>>, fields: (keyof T)[], renderItem?: (item: T) => React.ReactNode }) => {
+const ManagementSection = <T extends { id: number, title?: string, name?: string, amount?: number }>({ title, items, setItems, fields }: { title: string, items: T[], setItems: React.Dispatch<React.SetStateAction<T[]>>, fields: (keyof T)[] }) => {
     const [editingItem, setEditingItem] = useState<Partial<T> | null>(null);
     const [isCreating, setIsCreating] = useState(false);
 
@@ -110,8 +111,6 @@ const ManagementSection = <T extends { id: number, title?: string, name?: string
     };
 
     const sectionTitleId = `section-title-${title.replace(/\s+/g, '-').toLowerCase()}`;
-    
-    const getItemName = (item: T) => item.quote || item.question || item.title || item.name || (item.amount ? `$${item.amount}` : `Item ${item.id}`);
 
     return (
         <section aria-labelledby={sectionTitleId} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
@@ -129,17 +128,13 @@ const ManagementSection = <T extends { id: number, title?: string, name?: string
                 />
             )}
 
-            <ul className="space-y-3 mt-4" role="list">
+            <ul className="space-y-2 mt-4" role="list">
                 {items.map(item => {
-                    const itemName = getItemName(item);
+                    const itemName = item.title || item.name || (item.amount ? `$${item.amount}` : `Item ${item.id}`);
                     return (
-                        <li key={item.id} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                            <div className="flex-grow pr-4">
-                                {renderItem ? renderItem(item) : (
-                                    <span className="truncate dark:text-gray-200">{itemName}</span>
-                                )}
-                            </div>
-                            <div className="flex space-x-2 flex-shrink-0">
+                        <li key={item.id} className="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                            <span className="truncate pr-4 dark:text-gray-200">{itemName}</span>
+                            <div className="flex space-x-2">
                                 <button
                                     onClick={() => setEditingItem(item)}
                                     className="text-sm text-blue-600 dark:text-yellow-400 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1"
@@ -190,42 +185,42 @@ const GeneralSettings = ({ logoUrl, setLogoUrl }: { logoUrl: string | null; setL
     )
 };
 
-const NowPlayingSettings: React.FC<{ content: NowPlaying, setContent: (content: NowPlaying) => void }> = ({ content, setContent }) => {
-    const [formData, setFormData] = useState(content);
+const NowPlayingSettings: React.FC<{ nowPlaying: NowPlaying, setNowPlaying: (np: NowPlaying) => void }> = ({ nowPlaying, setNowPlaying }) => {
+    const [formData, setFormData] = useState(nowPlaying);
     const [isSaved, setIsSaved] = useState(false);
-
+    
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSave = (e: React.FormEvent) => {
         e.preventDefault();
-        setContent(formData);
+        setNowPlaying(formData);
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 2000);
     };
-    
+
     return (
-        <section aria-labelledby="now-playing-settings-title" className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-            <h3 id="now-playing-settings-title" className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Now Playing Information</h3>
+        <section aria-labelledby="now-playing-title" className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+            <h3 id="now-playing-title" className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Live Stream: Now Playing</h3>
             <form onSubmit={handleSave} className="space-y-4">
                 <div>
-                    <label htmlFor="songTitle" className="block text-sm font-medium text-gray-700 dark:text-gray-200">Song Title</label>
-                    <input type="text" id="songTitle" name="songTitle" value={formData.songTitle} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
+                    <label htmlFor="artist" className="block text-sm font-medium text-gray-700 dark:text-gray-200">Artist Name</label>
+                    <input type="text" id="artist" name="artist" value={formData.artist} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white" required />
                 </div>
                 <div>
-                    <label htmlFor="artistName" className="block text-sm font-medium text-gray-700 dark:text-gray-200">Artist Name</label>
-                    <input type="text" id="artistName" name="artistName" value={formData.artistName} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white" />
+                    <label htmlFor="song" className="block text-sm font-medium text-gray-700 dark:text-gray-200">Song Title</label>
+                    <input type="text" id="song" name="song" value={formData.song} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:text-white" required />
                 </div>
-                 <div className="flex justify-end items-center space-x-4">
+                <div className="flex justify-end items-center space-x-4">
                     {isSaved && <span className="text-sm text-green-600 dark:text-green-400">Saved!</span>}
                     <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update Now Playing</button>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 text-right">Clear fields and save to hide the display on the Home page.</p>
             </form>
         </section>
     );
 };
+
 
 const DonationPageSettings = ({ content, setContent }: { content: DonationPageContent; setContent: (content: DonationPageContent) => void; }) => {
     const [formData, setFormData] = useState(content);
@@ -399,7 +394,7 @@ const ContentPageSettings = ({ sectionTitle, content, setContent, fields }: { se
                             </div>
                         );
                     }
-                    if (field === 'description' || field === 'quote' || field === 'bio' || field.toLowerCase().includes('content')) {
+                    if (field === 'description' || field === 'quote' || field === 'bio') {
                         return (
                             <div key={field}>
                                 <label htmlFor={fieldId} className="block text-sm font-medium text-gray-700 dark:text-gray-200">{getLabel(field)}</label>
@@ -517,20 +512,12 @@ interface BackendPageProps {
     setYouthConnectPageContent: React.Dispatch<React.SetStateAction<YouthConnectPageContent>>;
     diasporaPageContent: DiasporaPageContent;
     setDiasporaPageContent: React.Dispatch<React.SetStateAction<DiasporaPageContent>>;
+    nowPlaying: NowPlaying;
+    setNowPlaying: React.Dispatch<React.SetStateAction<NowPlaying>>;
     yorubaHero: YorubaHero;
     setYorubaHero: React.Dispatch<React.SetStateAction<YorubaHero>>;
     analyticsData: AnalyticsData;
     setAnalyticsData: React.Dispatch<React.SetStateAction<AnalyticsData>>;
-    traditionalQA: TraditionalQAItem[];
-    setTraditionalQA: React.Dispatch<React.SetStateAction<TraditionalQAItem[]>>;
-    testimonials: Testimonial[];
-    setTestimonials: React.Dispatch<React.SetStateAction<Testimonial[]>>;
-    homePageContent: HomePageContent;
-    setHomePageContent: React.Dispatch<React.SetStateAction<HomePageContent>>;
-    headerContent: HeaderContent;
-    setHeaderContent: React.Dispatch<React.SetStateAction<HeaderContent>>;
-    nowPlaying: NowPlaying;
-    setNowPlaying: React.Dispatch<React.SetStateAction<NowPlaying>>;
 }
 
 const BackendPage: React.FC<BackendPageProps> = (props) => {
@@ -541,36 +528,9 @@ const BackendPage: React.FC<BackendPageProps> = (props) => {
                 <p className="text-gray-600 dark:text-gray-300 mt-1">Manage your application's content here.</p>
             </div>
             <GeneralSettings logoUrl={props.logoUrl} setLogoUrl={props.setLogoUrl} />
-            <NowPlayingSettings content={props.nowPlaying} setContent={props.setNowPlaying} />
-            <ContentPageSettings 
-                sectionTitle="Header Content" 
-                content={props.headerContent} 
-                setContent={props.setHeaderContent} 
-                fields={['title', 'subtitle', 'tagline']} 
-            />
-            <ContentPageSettings 
-                sectionTitle="Home Page Content" 
-                content={props.homePageContent} 
-                setContent={props.setHomePageContent} 
-                fields={[
-                    'heroTitle', 
-                    'heroSubtitle', 
-                    'heroButtonText', 
-                    'yorubaPeopleTitle',
-                    'yorubaPeopleContent',
-                    'yorubaPeopleButtonText',
-                    'testimonialsTitle',
-                    'exploreTitle',
-                    'exploreCard1Title',
-                    'exploreCard1Content',
-                    'exploreCard1ButtonText',
-                    'exploreCard2Title',
-                    'exploreCard2Content',
-                    'exploreCard2ButtonText'
-                ]} 
-            />
+            <NowPlayingSettings nowPlaying={props.nowPlaying} setNowPlaying={props.setNowPlaying} />
             <AnalyticsSettings data={props.analyticsData} setData={props.setAnalyticsData} />
-            <ContentPageSettings sectionTitle="Ojulowo Omo Yoruba Pataki Section" content={props.yorubaHero} setContent={props.setYorubaHero} fields={['name', 'bio', 'imageUrl']} />
+            <ContentPageSettings sectionTitle="Yoruba Hero Section" content={props.yorubaHero} setContent={props.setYorubaHero} fields={['name', 'bio', 'imageUrl']} />
             <ContentPageSettings sectionTitle="About Us Page" content={props.aboutUsPageContent} setContent={props.setAboutUsPageContent} fields={['title', 'subtitle', 'description', 'imageUrl']} />
             <ContentPageSettings sectionTitle="Vision Page" content={props.visionPageContent} setContent={props.setVisionPageContent} fields={['title', 'subtitle', 'quote', 'description', 'imageUrl']} />
             <ContentPageSettings sectionTitle="Youth Connect Page" content={props.youthConnectPageContent} setContent={props.setYouthConnectPageContent} fields={['title', 'subtitle', 'description', 'imageUrl']} />
@@ -578,21 +538,6 @@ const BackendPage: React.FC<BackendPageProps> = (props) => {
             <DonationPageSettings content={props.donationPageContent} setContent={props.setDonationPageContent} />
             <ThankYouSettings content={props.thankYouContent} setContent={props.setThankYouContent} />
             <ContactSettings contactInfo={props.contactInfo} setContactInfo={props.setContactInfo} />
-            <ManagementSection<TraditionalQAItem> title="Manage FAQ" items={props.traditionalQA} setItems={props.setTraditionalQA} fields={['question', 'answer']} />
-            <ManagementSection<Testimonial> 
-                title="Manage Testimonials" 
-                items={props.testimonials} 
-                setItems={props.setTestimonials} 
-                fields={['quote', 'author']}
-                renderItem={(item) => (
-                    <div>
-                        <blockquote className="text-gray-800 dark:text-gray-200 italic border-l-4 border-gray-300 dark:border-gray-500 pl-3">
-                            "{item.quote}"
-                        </blockquote>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 text-right mt-1">— {item.author}</p>
-                    </div>
-                )}
-            />
             <ManagementSection<Product> title="Manage Products" items={props.products} setItems={props.setProducts} fields={['name', 'description', 'price', 'imageUrl']} />
             <ManagementSection<NewsArticle> title="Manage News" items={props.news} setItems={props.setNews} fields={['title', 'excerpt', 'author', 'date', 'imageUrl']} />
             <ManagementSection<PodcastEpisode> title="Manage Podcasts" items={props.podcasts} setItems={props.setPodcasts} fields={['title', 'duration', 'imageUrl']} />

@@ -1,9 +1,7 @@
 
 import React from 'react';
-import { CartItem } from '../types.ts';
-import { ShoppingCartIcon } from './icons/ShoppingCartIcon.tsx';
-import { PayPalIcon } from './icons/PayPalIcon.tsx';
-import { StripeIcon } from './icons/StripeIcon.tsx';
+import { CartItem } from '../types';
+import { ShoppingCartIcon } from './icons/ShoppingCartIcon';
 
 interface ShoppingCartProps {
   isOpen: boolean;
@@ -11,10 +9,9 @@ interface ShoppingCartProps {
   cartItems: CartItem[];
   onRemoveFromCart: (productId: number) => void;
   onAddToCart: (product: CartItem) => void;
-  onStartShopping: () => void;
 }
 
-const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose, cartItems, onRemoveFromCart, onAddToCart, onStartShopping }) => {
+const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose, cartItems, onRemoveFromCart, onAddToCart }) => {
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
 
   return (
@@ -35,15 +32,9 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose, cartItems,
           <div className="flex-grow p-4 overflow-y-auto">
             {cartItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center text-gray-500 dark:text-gray-400">
-                <ShoppingCartIcon className="w-24 h-24 mb-4 text-gray-300 dark:text-gray-600" />
-                <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200">Your cart is empty</h3>
-                <p className="mt-2">Looks like you haven't added anything yet.</p>
-                <button
-                  onClick={onStartShopping}
-                  className="mt-6 bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                    Start Shopping
-                </button>
+                <ShoppingCartIcon className="w-16 h-16 mb-4" />
+                <p className="text-lg">Your cart is empty.</p>
+                <p>Add items to see them here.</p>
               </div>
             ) : (
               <ul className="space-y-4">
@@ -75,13 +66,6 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose, cartItems,
                 <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                     Proceed to Checkout
                 </button>
-                <div className="mt-3 text-center">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Accepted Payment Methods</p>
-                    <div className="flex justify-center items-center space-x-4">
-                        <PayPalIcon className="h-6 text-gray-700 dark:text-gray-300" />
-                        <StripeIcon className="h-6 text-gray-700 dark:text-gray-300" />
-                    </div>
-                </div>
             </footer>
           )}
         </div>

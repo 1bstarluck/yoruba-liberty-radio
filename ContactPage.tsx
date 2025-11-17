@@ -1,18 +1,12 @@
 
 import React from 'react';
-import { ContactInfo } from '../types.ts';
-import { WhatsAppIcon } from '../components/icons/WhatsAppIcon.tsx';
+import { ContactInfo } from '../types';
 
 interface ContactPageProps {
     contactInfo: ContactInfo;
 }
 
 const ContactPage: React.FC<ContactPageProps> = ({ contactInfo }) => {
-    const formatWhatsAppNumber = (phone: string) => {
-        // Removes all non-digit characters from the phone number
-        return phone.replace(/[^\d]/g, '');
-    };
-
     return (
         <div className="p-4 space-y-6">
             <div className="text-center">
@@ -29,16 +23,8 @@ const ContactPage: React.FC<ContactPageProps> = ({ contactInfo }) => {
                     <p className="text-blue-600 dark:text-yellow-400">{contactInfo.email}</p>
                 </div>
                  <div>
-                    <h3 className="font-semibold text-lg text-gray-800 dark:text-white">Call or Message Us</h3>
-                    <a 
-                        href={`https://wa.me/${formatWhatsAppNumber(contactInfo.phone)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors group"
-                    >
-                        <WhatsAppIcon className="w-5 h-5 text-green-500" />
-                        <span>{contactInfo.phone}</span>
-                    </a>
+                    <h3 className="font-semibold text-lg text-gray-800 dark:text-white">Call Us</h3>
+                    <p className="text-gray-600 dark:text-gray-300">{contactInfo.phone}</p>
                 </div>
             </div>
             <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6">

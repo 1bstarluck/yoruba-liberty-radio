@@ -1,13 +1,23 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Fix: Per coding guidelines, the API client is initialized directly with `process.env.API_KEY`.
-// Redundant variables and checks have been removed, assuming the key is always available.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const API_KEY = process.env.API_KEY;
+
+if (!API_KEY) {
+  // In a real app, you'd handle this more gracefully.
+  // For this context, we assume the API_KEY is set in the environment.
+  console.warn("Gemini API key not found in environment variables.");
+}
+
+const ai = new GoogleGenAI({ apiKey: API_KEY! });
 
 const model = 'gemini-2.5-flash';
 
 export const getGeminiAnswer = async (question: string): Promise<string> => {
+  if (!API_KEY) {
+    return "API Key not configured. Please set up your API key to use this feature.";
+  }
+  
   try {
     const response = await ai.models.generateContent({
         model: model,
